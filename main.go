@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gitUserConfig/configUtils"
+	"gitAutoUserConfig/configUtils"
 	"io"
 	"log"
 	"os"
@@ -13,7 +13,7 @@ import (
 
 var (
 	userConfigDir, _ = os.UserConfigDir()
-	configFile       = configUtils.GetConfigAsStruct(userConfigDir + ".config/gitUserConfig/config.json")
+	configFile       = configUtils.GetConfigAsStruct(userConfigDir + "/gitUserConfig/config.json")
 )
 
 func main() {
