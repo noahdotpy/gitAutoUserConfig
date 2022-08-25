@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"gitAutoUserConfig/configUtils"
 	"io"
@@ -18,36 +19,49 @@ var (
 
 func main() {
 
-	outputPossibleChoices()
+	fmt.Println("-- Choices: --")
+	getPossibleChoices()
+	for i, v := range getPossibleChoices() {
+		fmt.Println(i, v)
+	}
 
 	fmt.Print("\nChoice: ")
 
 	var rawInput string
 	fmt.Scan(&rawInput)
-	handleUserChoice(rawInput)
+	err := handleUserChoice(rawInput)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 }
 
-func handleUserChoice(input string) {
+func handleUserChoice(input string) error {
 	if strings.ToLower(input) == "new" {
 		handleMakeNewEntry()
-		return
+		return nil
 	}
 
 	var choice int
 	choice, err := strconv.Atoi(input)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
+	if choice >= len(configFile.Choices) {
+		return errors.New("Entry not found.")
+	}
 	_, err = addToLocalGitConfig("user.name", configFile.Choices[choice].Name)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	_, err = addToLocalGitConfig("user.email", configFile.Choices[choice].Email)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+
+	return nil
 }
 
 func handleMakeNewEntry() {
@@ -56,15 +70,16 @@ func handleMakeNewEntry() {
 
 // TODO: Handle errors better by outputting the git output
 func addToLocalGitConfig(key string, value string) (io.ReadCloser, error) {
-	out, err := exec.Command("git", "config", "--local", key, value).StdoutPipe()
+	cmd := exec.Command("git", "config", "--local", key, value)
+	out, err := cmd.StdoutPipe()
 
 	return out, err
 }
 
-func outputPossibleChoices() {
-	fmt.Println("-- Choices: --")
+func getPossibleChoices() (rslt []string) {
 	for i, v := range configFile.Choices {
-		fmt.Printf("  * %v: %v %v\n", strconv.Itoa(i), v.Name, v.Email)
+		rslt = append(rslt, fmt.Sprintf("  * %v: %v - %v\n", strconv.Itoa(i), v.Name, v.Email))
 	}
-	fmt.Println("  * new: Make new entry.")
+	rslt = append(rslt, "  * new: Make new entry.")
+	return rslt
 }
