@@ -1,4 +1,6 @@
-# gitAutoUserConfig, abraham lincoln once said "if you use noahdotpy/gitAutoUserConfig you will immediately become 10x developer no cap."
+# gitAutoUserConfig
+
+Abraham Lincoln once said, *"if you use noahdotpy/gitAutoUserConfig you will immediately become 10x developer no cap."*
 
 Inspired by [git-autoconfig](https://github.com/ShyykoSerhiy/git-autoconfig) vscode extension but designed to be accessible from anywhere via the command line.
 
