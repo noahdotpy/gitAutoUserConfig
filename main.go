@@ -6,23 +6,17 @@ import (
 	"gitAutoUserConfig/configUtils"
 	"io"
 	"log"
-	"os"
 	"os/exec"
 	"strconv"
 	"strings"
-)
-
-var (
-	userConfigDir, _ = os.UserConfigDir()
-	configFile       = configUtils.GetConfigAsStruct(userConfigDir + "/gitUserConfig/config.json")
 )
 
 func main() {
 
 	fmt.Println("-- Choices: --")
 	getPossibleChoices()
-	for i, v := range getPossibleChoices() {
-		fmt.Println(i, v)
+	for _, v := range getPossibleChoices() {
+		fmt.Println(v)
 	}
 
 	fmt.Print("\nChoice: ")
@@ -48,15 +42,21 @@ func handleUserChoice(input string) error {
 		return err
 	}
 
-	if choice >= len(configFile.Choices) {
+	if choice >= len(configUtils.ConfigObj.Choices) {
 		return errors.New("Entry not found.")
 	}
-	_, err = addToLocalGitConfig("user.name", configFile.Choices[choice].Name)
+	_, err = addToLocalGitConfig(
+		"user.name",
+		configUtils.ConfigObj.Choices[choice].Name,
+	)
 	if err != nil {
 		return err
 	}
 
-	_, err = addToLocalGitConfig("user.email", configFile.Choices[choice].Email)
+	_, err = addToLocalGitConfig(
+		"user.email",
+		configUtils.ConfigObj.Choices[choice].Email,
+	)
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,16 @@ func handleUserChoice(input string) error {
 }
 
 func handleMakeNewEntry() {
-	fmt.Println("Making new config entry.")
+
+	fmt.Print("Name: ")
+	var name string
+	fmt.Scan(&name)
+
+	fmt.Print("Email: ")
+	var email string
+	fmt.Scan(&email)
+
+	configUtils.AppendChoiceToConfig(name, email)
 }
 
 // TODO: Handle errors better by outputting the git output
@@ -77,7 +86,7 @@ func addToLocalGitConfig(key string, value string) (io.ReadCloser, error) {
 }
 
 func getPossibleChoices() (rslt []string) {
-	for i, v := range configFile.Choices {
+	for i, v := range configUtils.ConfigObj.Choices {
 		rslt = append(rslt, fmt.Sprintf("  * %v: %v - %v\n", strconv.Itoa(i), v.Name, v.Email))
 	}
 	rslt = append(rslt, "  * new: Make new entry.")
