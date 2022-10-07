@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"gitAutoUserConfig/configUtils"
+	"gauc/configUtils"
 	"io"
 	"log"
 	"os/exec"

@@ -7,7 +7,7 @@ import (
 
 var (
 	UserConfigDir, _ = os.UserConfigDir()
-	ConfigFilePath   = UserConfigDir + "/gitUserConfig/config.json"
+	ConfigFilePath   = UserConfigDir + "/gauc/config.json"
 	ConfigObj, _     = GetConfigAsStruct(ConfigFilePath)
 )
 
