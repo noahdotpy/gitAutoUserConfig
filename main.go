@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gitauc-golang/configUtils"
+	"github.com/noahdotpy/gitauc-golang/configUtils"
 )
 
 func main() {
