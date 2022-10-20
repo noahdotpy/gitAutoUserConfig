@@ -12,9 +12,9 @@ var (
 )
 
 type Config struct {
-	Choices []Choice `json:"choices"`
+	Accounts []Account `json:"choices"`
 }
-type Choice struct {
+type Account struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
@@ -46,12 +46,12 @@ func SaveConfig(filePath string, data Config) error {
 }
 
 func AppendChoiceToConfig(n, e string) error {
-	newChoice := Choice{
+	newChoice := Account{
 		Name:  n,
 		Email: e,
 	}
 
-	ConfigObj.Choices = append(ConfigObj.Choices, newChoice)
+	ConfigObj.Accounts = append(ConfigObj.Accounts, newChoice)
 	err := SaveConfig(ConfigFilePath, ConfigObj)
 	if err != nil {
 		return err

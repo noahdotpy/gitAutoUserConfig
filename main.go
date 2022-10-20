@@ -3,12 +3,13 @@ package main
 import (
 	"errors"
 	"fmt"
-	"gauc/configUtils"
 	"io"
 	"log"
 	"os/exec"
 	"strconv"
 	"strings"
+
+	"github.com/gitauc-golang/configUtils"
 )
 
 func main() {
@@ -42,12 +43,12 @@ func handleUserChoice(input string) error {
 		return err
 	}
 
-	if choice >= len(configUtils.ConfigObj.Choices) {
+	if choice >= len(configUtils.ConfigObj.Accounts) {
 		return errors.New("Entry not found.")
 	}
 	_, err = addToLocalGitConfig(
 		"user.name",
-		configUtils.ConfigObj.Choices[choice].Name,
+		configUtils.ConfigObj.Accounts[choice].Name,
 	)
 	if err != nil {
 		return err
@@ -55,7 +56,7 @@ func handleUserChoice(input string) error {
 
 	_, err = addToLocalGitConfig(
 		"user.email",
-		configUtils.ConfigObj.Choices[choice].Email,
+		configUtils.ConfigObj.Accounts[choice].Email,
 	)
 	if err != nil {
 		return err
@@ -86,7 +87,7 @@ func addToLocalGitConfig(key string, value string) (io.ReadCloser, error) {
 }
 
 func getPossibleChoices() (rslt []string) {
-	for i, v := range configUtils.ConfigObj.Choices {
+	for i, v := range configUtils.ConfigObj.Accounts {
 		rslt = append(rslt, fmt.Sprintf("  * %v: %v - %v\n", strconv.Itoa(i), v.Name, v.Email))
 	}
 	rslt = append(rslt, "  * new: Make new entry.")
